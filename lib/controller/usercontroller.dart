@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-userdata() async {
+userdata(city) async {
   var baseurl =
-      "https://api.openweathermap.org/data/2.5/weather?q=karachi&appid=f5783e1fee68d6228723ecc46804ee40";
+      "https://api.weatherbit.io/v2.0/current?city=$city&country=Pakistan&key=ac86edb49dd848e6be23c91ff42d1efe";
   var url = Uri.parse(baseurl);
   var res = await http.get(url);
   var jsondata = jsonDecode(res.body);

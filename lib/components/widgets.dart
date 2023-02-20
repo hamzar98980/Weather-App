@@ -72,7 +72,7 @@ class Tabwidget extends StatelessWidget {
                   child: Container(
                     child: Center(
                       child: Row(
-                        children: [
+                        children: const [
                           Cloudy(),
                           Cloudynow(),
                           Cloudy(),

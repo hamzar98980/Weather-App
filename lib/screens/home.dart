@@ -1,16 +1,54 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:proj/screens/weathers.dart';
 
 import '../components/widgets.dart';
 import '../controller/usercontroller.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
-    userdata();
+    // userdata('Karachi');
+    List citylist = ['Karachi', 'hyderabad', 'quetta', 'Lahore', 'Islamabad'];
 
     return Scaffold(
-      body: Container(
+      bottomNavigationBar: CurvedNavigationBar(
+        index: 0,
+        backgroundColor: Color.fromARGB(255, 52, 30, 133),
+        buttonBackgroundColor: Color.fromARGB(255, 85, 53, 204),
+        color: Color(0xFF48319D),
+        animationDuration: Duration(milliseconds: 300),
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Weathers(),
+                ));
+          }
+          print(index);
+        },
+        items: const [
+          Icon(
+            Icons.pin_drop,
+            color: Colors.white,
+            size: 30,
+          ),
+          Icon(
+            Icons.add_circle_outline,
+            size: 30,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.menu_sharp,
+            size: 30,
+            color: Colors.white,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Stack(
@@ -43,15 +81,45 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 100,
-                  left: MediaQuery.of(context).size.width * 0.4,
+                  top: 80,
+                  left: MediaQuery.of(context).size.width * 0.38,
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        child: Text(
-                          "19°",
-                          style: TextStyle(fontSize: 50, color: Colors.white),
+                        child: FutureBuilder(
+                          future: userdata('Karachi'),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              var jsonData = snapshot.data;
+                              var name = jsonData['data'][0]['city_name'];
+                              var type =
+                                  jsonData['data'][0]['weather']['description'];
+                              var temp = jsonData['data'][0]['app_temp'];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${name}",
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
+                                  ),
+                                  Text(
+                                    "${temp}°",
+                                    style: TextStyle(
+                                        fontSize: 50, color: Colors.white),
+                                  ),
+                                  Text(
+                                    "${type}",
+                                    style: TextStyle(
+                                        fontSize: 17, color: Colors.grey),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
                         ),
                       ),
                     ],
